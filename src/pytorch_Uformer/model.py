@@ -1067,7 +1067,7 @@ class BasicUformerLayer(nn.Module):
 
 
 class Uformer(nn.Module):
-    def __init__(self, img_size=256, in_chans=3, dd_in=3,
+    def __init__(self, img_size=256, in_chans=13, dd_in=3,
                  embed_dim=32, depths=[2, 2, 2, 2, 2, 2, 2, 2, 2], num_heads=[1, 2, 4, 8, 16, 16, 8, 4, 2],
                  win_size=8, mlp_ratio=4., qkv_bias=True, qk_scale=None,
                  drop_rate=0., attn_drop_rate=0., drop_path_rate=0.1,
@@ -1302,7 +1302,8 @@ class Uformer(nn.Module):
 
         # Output Projection
         y = self.output_proj(deconv3)
-        return x + y if self.dd_in ==3 else y
+        # return x + y if self.dd_in ==3 else y
+        return y
 
     def flops(self):
         flops = 0
