@@ -167,7 +167,23 @@ class MeanIoU(nn.Module):
 
         return iou
 
+class MeanIoUBinary(nn.Module):
+    def __init__(self, n_classes=13, smooth=1e-5):
+        super(MeanIoUBinary, self).__init__()
+        self.smooth = smooth
+        self.n_classes = n_classes
 
+
+    def forward(self, y_pred, y_true):
+        assert y_true.shape == y_pred.shape, f"{y_true.shape} != {y_pred.shape}" # B, C, H, W
+        T = y_true.flatten()
+        P = y_pred.flatten()
+        TP = torch.sum(T * P)
+        FN = torch.sum(T * (1 - P))
+        FP = torch.sum((1 - T) * P)
+        iou = (TP + self.smooth) / (TP + FN +  FP + self.smooth)
+
+        return iou
 """
     T = tf.keras.backend.flatten(y_true)
     P = tf.keras.backend.flatten(y_pred)
