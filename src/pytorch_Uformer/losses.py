@@ -98,7 +98,7 @@ class DiceLoss(nn.Module):
     def __init__(self, beta=1, class_weights=None, class_indexes=None, smooth=1e-5):
         super(DiceLoss, self).__init__()
         self.beta = beta
-        self.class_weights = class_weights if class_weights is not None else 1
+        self.class_weights = torch.Tensor(class_weights) if class_weights is not None else 1
         self.class_indexes = class_indexes
         self.smooth = smooth
 
@@ -118,7 +118,7 @@ class DiceLoss(nn.Module):
                 / ((1 + self.beta ** 2) * tp + self.beta ** 2 * fn + fp + self.smooth)
         
         if self.class_weights is not None:
-            dice = dice * self.class_weights
+            dice = dice * self.class_weights.cuda()
 
         dice = torch.mean(dice)
 
