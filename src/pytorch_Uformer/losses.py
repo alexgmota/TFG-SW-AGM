@@ -87,11 +87,9 @@ class DiceCoeficient(nn.Module):
     def forward(self, y_pred, y_true):
         T = y_true.flatten()
         P = y_pred.flatten()
-        TP = torch.sum(T * P)
-        FN = torch.sum(T * (1 - P))
-        FP = torch.sum((1 - T) * P)
-        dice = (2*TP + self.smooth) / (2*TP + FP + FN + self.smooth)
-        return dice
+
+        intersection = torch.sum(T * P)
+        return ((2 * intersection) + self.smooth) / (T.sum() + P.sum() + self.smooth)
 
 
 
